@@ -3,7 +3,6 @@ kaboom({
   scale: 1,
   background: [10,150,200],
 })
-
 //how the sprites are retrieved and loaded
 loadSpriteAtlas("https://kaboomjs.com/sprites/dungeon.png", "atlas.json");
 
@@ -14,21 +13,25 @@ const levelConfig = {
   pos: vec2(32,32),
   "w": () => [
     "wall",
-    sprite("wall"),
+    rect(16,16),
+    color(50,50,200),
     area(),
     solid()
   ],
    "f": () => [
     "floor",
-    sprite("wall"),
+    color(50,50,200),
+    rect(16,16),
     area(),
     solid()
   ],
   "b": () => [
     "barrier",
-    sprite("wall"),
+    rect(32,64),
     area(),
-    opacity(0)
+    origin("left"),
+    solid()
+    //opacity(0)
   ],
   //green enemy
   "o": () => [
@@ -54,12 +57,12 @@ const levelConfig = {
   ],
   "D": () => [
     "door",
-    sprite("closed_door"),
+    rect(32,32),
     area({
       "scale": 0.60
     }),
     solid(),
-    origin("center")
+    origin("left")
   ],
   //required to win
     "c": () => [
@@ -72,28 +75,22 @@ const levelConfig = {
   //red enemy
   "d": () => [
     "enemy",
-    sprite("demon",{
-      "anim":"idle"
-    }),
+    color(200,20,20),
+    rect(16,16),
     area(),
-    {
-      "xVel": 45
-    }
   ],
- 
 }
 
 let levelNum = 0
 
 const levels = [
   //1st level introduces you to an enemy, the heart pickup, and the knowledge that you need the chest.
-  [ "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-    "w                                       w",
-    "w                                       w",
-    "w            ",
-    "w     c ",
-    "w    ww      ",
-    "w s h    b    o b"  ,
+  [ "w    wwwwwwwwwwwwwww          ",
+    "w             ww",
+    "w             ",
+    "w     c       ",   
+    "w    ww       b",
+    "w s h     d    "  ,
     "fffff   ffffffffffffD "
   ],
   //2nd level introduces you to the platforming.
@@ -198,11 +195,16 @@ scene("game",() => {
       pos(level.getPos(2,0)),
       area({scale:0.5}),
       origin("bot"),
-      solid(),
+      body(),
       {"speed": 200,"jumpSpeed": 420}
   ])
   
-    
+  onUpdate("barrier", (b) => {
+    if(hasKey){
+      b.solid = false
+    }   
+  }) 
+  
   //allows the enemies to move
   onUpdate("enemy",(e) => {
     e.move(e.xVel,0)
@@ -285,24 +287,30 @@ scene("game",() => {
       player.flipX(true)
   }) 
   
-  onKeyPress(["d","a","left","right","w","space"],() => {
+  onKeyPress(["d","a","left","right"],() => {
       player.play("run")           
   }) 
   
-  onKeyRelease(["d","a","left","right","w","space"],() => {
+  onKeyRelease(["d","a","left","right"],() => {
       player.play("idle")           
   }) 
   
-   onKeyDown("w",() => {
-      player.move(0,-player.speed)
+   onKeyPress("w",() => {
+    if(player.isGrounded()) {
+      player.jump(player.jumpSpeed)
+    }
   })
   
-   onKeyDown("space",() => {
-      player.move(0,-player.speed)
+   onKeyPress("up",() => {
+    if(player.isGrounded()) {
+      player.jump(player.jumpSpeed)
+    }
   })
   
-   onKeyDown("s",() => {
-      player.move(0,player.speed)
+   onKeyPress("space",() => {
+    if(player.isGrounded()) {
+      player.jump(player.jumpSpeed)
+    }
   })
 })
 
