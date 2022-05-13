@@ -18,6 +18,13 @@ const levelConfig = {
     area(),
     solid()
   ],
+  "&": () => [
+    "wallp",
+    rect(16,16),
+    color(50,50,200),
+    area(),
+    solid()
+  ],
    "f": () => [
     "floor",
     color(50,50,200),
@@ -25,26 +32,36 @@ const levelConfig = {
     area(),
     solid()
   ],
-  "b": () => [
-    "barrier",
+  "*": () => [
+    "floor",
+    color(50,50,200),
+    rect(16,16),
+    area(),
+    opacity(0)
+  ],
+  "g": () => [
+    "gate",
     rect(32,64),
     area(),
     origin("left"),
     solid()
     //opacity(0)
   ],
+  "B": () => [
+    "barrier",
+    rect(16,16),
+    area(),
+    opacity(0)
+  ],
   //green enemy
-  "o": () => [
-    "enemy",
-    sprite("ogre",{
-      "anim":"run"
-    }),
-    area({
-      "scale":0.50
-    }),
-    origin("center"),
+  "p": () => [
+    "platform",
+    rect(32,16),
+    area(),
+    solid(),
+    origin("top"),
     {
-      "xVel": 25
+      "yVel": -25
     }
   ],
   "h": () => [
@@ -57,16 +74,16 @@ const levelConfig = {
   ],
   "D": () => [
     "door",
-    rect(32,32),
+    rect(32,16),
     area({
       "scale": 0.60
     }),
     solid(),
-    origin("left")
+    origin("topleft")
   ],
   //required to win
     "c": () => [
-    "chest",
+    "button",
     sprite("chest"),
     area(),
     solid(),
@@ -78,6 +95,52 @@ const levelConfig = {
     color(200,20,20),
     rect(16,16),
     area(),
+    body(),
+    cleanup()
+  ],
+  //red enemy
+  "#": () => [
+    "enemy",
+    color(50,100,250),
+    rect(16,16),
+    area(),
+    solid(),
+    cleanup()
+  ],
+   "b": () => [
+    "boxes",
+    color(160,100,20),
+    rect(16,16),
+    area(),
+    body(),
+    cleanup()
+  ],
+  "k": () => [
+    "key",
+    color(250,250,0),
+    rect(16,16),
+    area(),
+  ],
+  "u": () => [
+    "button",
+    sprite("chest"),
+    area(),
+    solid(),
+    origin("topleft")
+  ],
+  "t": () => [
+    "tele",
+    color(150,30,150),
+    rect(16,16),
+    area(),
+    origin("topleft")
+  ],
+  "-": () => [
+    "tele2",
+    color(150,30,150),
+    rect(16,16),
+    area(),
+    origin("topleft")
   ],
 }
 
@@ -85,60 +148,86 @@ let levelNum = 0
 
 const levels = [
   //1st level introduces you to an enemy, the heart pickup, and the knowledge that you need the chest.
-  [ "w    wwwwwwwwwwwwwww          ",
-    "w             ww",
+  [ " wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+    "w                                        ww",
     "w             ",
-    "w     c       ",   
-    "w    ww       b",
-    "w s h     d    "  ,
-    "fffff   ffffffffffffD "
+    "w                            ",   
+    "w             k                          g",
+    "w s  h      d         b              ",
+    " ffffffffffffffffffffffffff      fffffffffffD ",
+    "                          w      w",
+    "                          w      w",
+    "                          w     fw",
+    "                          w     ww",
+    "                          w    fww",
+    "                          w  ffffw",
+    "                        ww&      w",
+    "                        w &      w",
+    "                        wc&ffffffw",
+    "                        www        ",
+
   ],
   //2nd level introduces you to the platforming.
-  [ "w    wwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-    "w            ",
-    "w            ",
-    "w                     c",
-    "w     ff  ff  f   f  ff  ff",
-    "w s      b    d  h   d    b",
-    "fffff ff  ff  ff ff  ff  fffffD "
+  [ " wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+    "w                                w",
+    "w -                              w",
+    "w                                w",
+    "w                                w",
+    "w                                w",
+    "w          B       B             w",
+    "w    f                           w",
+    "w    w                  ff       w",
+    "w s fw     p       p    w        w",
+    "wffffwf################fffffD    w",
+    "w                                w",
+    "w                                w",
+    "w                 B              w",
+    "w                                w",
+    "wt                p              w",
+    "wfff              *  ffffffffffffw",
+    "          ",
+    "          ",
+    "          ",
+    "          ",
+    "          ",
   ],
   //3rd level starts to test your platforming skill.
-   ["w     wwwwwwwwwwwwwwwwwwwwwwwwwww",
-    "w           ",
-    "w           ",
-    "w           ",
-    "w           ", 
-    "w                ", 
-    "w              b d  bh       ",
-    "w         h   f  f  ff    ff",
-    "w        ff               ww",
-    "w    ff                   ww",
-    "w s   b       o      o b  wwfc  " ,
-    "ffffffffffffffffffffffffffffffffD "
+   [" wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+    "w       w   ",
+    "w       w   ",
+    "w       w   ",
+    "w       w   ", 
+    "w       w        ", 
+    "w       wwwwwwwwww",
+    "w         ",
+    "w         ",
+    "w sh",
+    "wddddddddddddddddd      c",
+    " fffffffffwwwwwwwwwwwwwwfffD "
   ],
   //4th ups the difficulty by adding enemies that you have to jump between.
-  [ "w     wwwwwwwwwwwwwwwwwwwwwwwwwww",
-    "w                               w",
-    "w                               w",
-    "w                               w",
-    "w                               w", 
-    "w              b d bh           w",
-    "w         h   f  f  f           w",
-    "w        ff         wc   b   d bw",
-    "w    ff  ww         ffffff      w",
-    "w s   b       o      o b        w" ,
-    "wfffffffffffffffffffffffff      w",
-    "w     f   f   f   f   f         w",
-    "w   f   f   f   f   f   f       w",
-    "w   ffffffffffffffffffffffffffff ",
-    "w   w",
-    "w   w  b         d             b",
-    "w     ",
-    "w      b  o    o    o    o   o b",
-    "wfffffffffffffffffffffffffffffffD",
+  [ "  wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww ",
+    " w                               w",
+    " w                               w",
+    " w                               w",
+    " w                               w", 
+    " w                               w",
+    " w                               w",
+    " w                               w",  
+    " w                               w",
+    " w s                             w",
+    " wfffffffffffffffffffffffff      w",
+    " w     f   f   f   f   f         w",
+    " w   f   f   f   f   f   f       w",
+    " w   ffffffffffffffffffffffffffff ",
+    " w   w",
+    " w   w  b         d             b",
+    " w     ",
+    " w      b  o    o    o    o   o b",
+    "  fffffffffffffffffffffffffffffffD",
   ],
   //5th level a real test of your skill in platforming
-   [ "w     wwwwwwwwwwwwwwwwwwwwwwwwwww",
+   ["wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
     "w                               w",
     "w                               w",
     "w                               w",
@@ -180,7 +269,23 @@ scene("game",() => {
   
   let hp = 2
   
+  let tempinv = false
+  
   let hasKey = false
+  
+  let hasCKey = false
+  
+  let platjump = true
+  
+  let telePaused = false
+  
+  let Tele2posX = 0
+  
+  let Tele2posY = 0
+  
+  let TeleposX = 0
+  
+  let TeleposY = 0
   
   const level = addLevel(levels[levelNum],levelConfig)
 
@@ -192,22 +297,40 @@ scene("game",() => {
   
   const player = add([
       sprite("hero"),
-      pos(level.getPos(2,0)),
+      pos(level.getPos(4,4)),
       area({scale:0.5}),
       origin("bot"),
       body(),
       {"speed": 200,"jumpSpeed": 420}
-  ])
+  ]) 
+  onUpdate("boxes", (b) => {
+    if(hasCKey){
+     b.color.r = 200
+     b.color.g = 140
+     b.color.b = 60
+    }   
+  })
+
+  onUpdate("tele2", (t) => {
+     Tele2posX = t.pos.x
+     Tele2posY = t.pos.y
+  })
   
-  onUpdate("barrier", (b) => {
+  onUpdate("tele", (t) => {
+     TeleposX = t.pos.x
+     TeleposY = t.pos.y
+  })
+  
+  //gate lock/unlock
+  onUpdate("gate", (b) => {
     if(hasKey){
       b.solid = false
     }   
   }) 
   
-  //allows the enemies to move
-  onUpdate("enemy",(e) => {
-    e.move(e.xVel,0)
+  //plat movement
+  onUpdate("platform",(p) => {
+    p.move(0,p.yVel)
   })
   //height check to see if you fell off the map
   onUpdate(() => {
@@ -215,30 +338,111 @@ scene("game",() => {
        go("lose")
     }
   })
-  //keeps the enemies within a confined area
-  onCollide("enemy","barrier",(e,b) => {
-    e.xVel = -e.xVel
-    e.move(e.xVel,0)
-    if(e.xVel < 0) {
-       e.flipX(true)
-    }
-    else{
-      e.flipX(false)
-    }
+  //plat going down
+  onCollide("platform","barrier",(p,b) => {
+    p.yVel = -p.yVel
+    p.move(0,p.yVel)
+  })
+  //plat going up
+  onCollide("platform","floor",(p,f) => {
+    p.yVel = -25
   })
   
-  player.onCollide("chest",(c) => {
+    onCollide("platform","enemy",(p,e) => {
+    p.yVel = -25
+  })
+  
+  //player button activation
+  player.onCollide("button",(c) => {
+   if(hasCKey == true){
+    c.play("open")
+    hasKey = true
+   }
+  }) 
+  //grabbing key
+  player.onCollide("key",(k) => {
+    hasCKey = true
+    destroy(k)
+  }) 
+  //box button activation
+  onCollide("boxes","button",(b,c) => {
     c.play("open")
     hasKey = true
   }) 
-  
+  //enemy button activation
+  onCollide("enemy","button",(e,c) => {
+    c.play("open")
+    hasKey = true
+  })
+  //box player collision
+  player.onCollide("boxes",(b) => {
+   if(hasCKey == true){
+    if(player.pos.x <= b.pos.x) {
+    b.pos.x += 1
+    }
+      if(player.pos.x >= b.pos.x) {
+    b.pos.x -= 1
+    }
+   }
+  })
+  //box pushes enemy
+  onCollide("boxes","enemy",(b,e) => {
+    if(b.pos.x <= e.pos.x) {
+    e.pos.x += 0.5
+    }
+      if(b.pos.x >= e.pos.x) {
+    e.pos.x -= 0.5
+    }
+   })
+  //anti-clipping on box-wall collision
+  onCollide("boxes","wall",(b,w) => {
+    if(b.pos.x <= w.pos.x) {
+    b.pos.x -= 1
+    }
+      if(b.pos.x >= w.pos.x) {
+    b.pos.x += 1
+    }
+   })
+
+  //box pushes other boxes
+  onCollide("boxes","boxes",(u,b) => {
+    if(b.pos.x <= u.pos.x) {
+    u.pos.x += 0.5
+    }
+      if(b.pos.x >= u.pos.x) {
+    u.pos.x -= 0.5
+    }
+   })
+   //player moves on plat
+   player.onCollide("platform",(p) => {
+    player.play("idle")
+    if(player.pos.y <= p.pos.y) {
+    player.pos.y = p.pos.y-1
+    }
+    platjump = true
+    telePaused = false
+    onKeyPress("space",() => {
+     if(platjump == true) {
+     player.jump(player.jumpSpeed)
+     platjump = false
+     }
+    })
+  }) 
+  //animation reset on player
   player.onCollide("wall",() => {
     player.play("idle")
   }) 
+  
   //the damage system
   player.onCollide("enemy",() => {
-    addKaboom(player.pos)
+    if(tempinv == false){
+      addKaboom(player.pos)
       hp--
+      tempinv = true
+      wait(1, () => {
+    tempinv = false
+    })
+    }
       hpLabel.text = "hp: "+hp
     if(hp==0){
       destroy(player)
@@ -260,6 +464,29 @@ scene("game",() => {
       }
     } 
   })
+  
+  player.onCollide("tele",(t) => {
+    if(telePaused == false){
+     player.pos.x = Tele2posX
+     player.pos.y = Tele2posY
+     telePaused = true
+     wait(0.5, () => {
+      telePaused = false
+     })
+    }
+  }) 
+  
+  player.onCollide("tele2",(t) => {
+    if(telePaused == false){
+     player.pos.x = TeleposX
+     player.pos.y = TeleposY
+     telePaused = true
+     wait(0.5, () => {
+      telePaused = false
+     })
+    }
+  }) 
+  
   //health pickup
   player.onCollide("hHeart",(h) => {
       hp++
@@ -303,14 +530,14 @@ scene("game",() => {
   
    onKeyPress("up",() => {
     if(player.isGrounded()) {
-      player.jump(player.jumpSpeed)
+      player.jump(player.jumpSpeed)  
     }
   })
   
    onKeyPress("space",() => {
-    if(player.isGrounded()) {
-      player.jump(player.jumpSpeed)
-    }
+     if(player.isGrounded) {
+       player.jump(player.jumpSpeed)      
+      }      
   })
 })
 
