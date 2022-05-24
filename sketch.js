@@ -246,6 +246,7 @@ const levels = [
     " ",
     " ",
     " k",
+    " w",
   ],
   //5th level a real test of your skill in platforming and skill
    [" wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
@@ -271,9 +272,9 @@ const levels = [
     "w   w     f         w               w",
     "wf     f  w        www              w",
     "wfffffff ffffffffffffffffffffff    fw",
-    "w  wwww                    b      ffw", 
-    "w ww                       b     fffw",
-    "www         f              b    fw ww",
+    "w  wwww                    w      ffw", 
+    "w ww                       w     fffw",
+    "www         f              w    fw ww",
     "w     ff        ff         b   fw  ww",
     "w   f### ###########  f    b  fw   ww",
     "w   wwww            www    b fw   -ww",
@@ -282,11 +283,10 @@ const levels = [
     "wh        ff   ff     fff  ff       w",
     "whh  off fw          fff    ff      w",
     "wfffffff f           fff     fffffD w",
-    "w      # #           fff            w",
-    "w      # #           fff            w",
-    "w      #c#           fff            w",
-    "w####################fff            w",
-    "wfffffffffffffffffffffffwwwwwwwwwwwww",
+    "w      # #           fff            ",
+    "w      # #           fff            ",
+    "w      #c#           fff            ",
+    "w####################"
   ],
 ]
 
