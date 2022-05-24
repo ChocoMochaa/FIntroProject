@@ -3,66 +3,72 @@ kaboom({
   scale: 1,
   background: [10,150,200],
 })
+
 //how the sprites are retrieved and loaded
-loadSpriteAtlas("https://kaboomjs.com/sprites/dungeon.png", "atlas.json");
+loadSpriteAtlas("Slime Time Art Assets.png", "atlas.json");
+loadSpriteAtlas("Gate.png", "atlas2.json");
+loadSprite("Door", "Door-1.png.png")
+loadSprite("Plat", "Plat-1.png.png")
 
 //the setup for the levels
 const levelConfig = {
   width: 16,
   height: 16,
   pos: vec2(32,32),
+  
   "w": () => [
     "wall",
-    rect(16,16),
-    color(50,50,200),
+    sprite("wall"),
     area(),
     solid()
   ],
+  //clippable wall
   "&": () => [
     "wallp",
-    rect(16,16),
-    color(50,50,200),
+    sprite("wall"),
     area(),
     solid()
   ],
    "f": () => [
     "floor",
-    color(50,50,200),
-    rect(16,16),
+    sprite("floor"),
     area(),
     solid()
   ],
+  //lower barrier for plat
   "*": () => [
     "floor",
-    color(50,50,200),
-    rect(16,16),
+    sprite("floor"),
     area(),
     opacity(0)
+    //openable gate (requires keycard)
   ],
   "g": () => [
     "gate",
-    rect(32,64),
+    sprite("Gate"),
     area(),
     origin("left"),
     solid()
     //opacity(0)
   ],
+  //top barrier for plat
   "B": () => [
     "barrier",
     rect(16,16),
     area(),
     opacity(0)
   ],
-  //green enemy
+  //moving platform
   "p": () => [
     "platform",
-    rect(32,16),
+    sprite("Plat"),
     area(),
     solid(),
     origin("top"),
     {
       "yVel": -25
     }
+    //actually a potion (totally not reused code)
   ],
   "h": () => [
     "hHeart",
@@ -74,14 +80,12 @@ const levelConfig = {
   ],
   "D": () => [
     "door",
-    rect(32,16),
-    area({
-      "scale": 0.60
-    }),
+    sprite("Door"),
+    area(),
     solid(),
     origin("topleft")
   ],
-  //required to win
+  //required to access door
     "c": () => [
     "button",
     sprite("chest"),
@@ -89,57 +93,57 @@ const levelConfig = {
     solid(),
     origin("topleft")
   ],
-  //red enemy
+  //spike (reused name)
   "d": () => [
     "enemy",
-    color(200,20,20),
-    rect(16,16),
+    sprite("demon"),
     area(),
     body(),
     cleanup()
   ],
-  //red enemy
+  //plasma enemy
   "#": () => [
     "enemy",
-    color(50,100,250),
-    rect(16,16),
+    sprite("plasma"),
     area(),
     solid(),
     cleanup()
   ],
+  //physics based (locked)
    "b": () => [
     "boxes",
-    color(160,100,20),
-    rect(16,16),
+    sprite("box"),
     area(),
     body(),
     cleanup()
   ],
+  //physics based (unlocked)
+  "^": () => [
+    "boxe",
+    sprite("boxe"),
+    area(),
+    body(),
+    cleanup()
+  ],
+  //keycard (unlocks chest and gate)
   "k": () => [
     "key",
-    color(250,250,0),
-    rect(16,16),
+    sprite("key"),
     area(),
   ],
-  "u": () => [
-    "button",
-    sprite("chest"),
-    area(),
-    solid(),
-    origin("topleft")
-  ],
+  //teleporter (sends to tele 2 on contact)
   "t": () => [
     "tele",
-    color(150,30,150),
-    rect(16,16),
+    sprite("tele"),
     area(),
+    solid(),
     origin("topleft")
   ],
   "-": () => [
     "tele2",
-    color(150,30,150),
-    rect(16,16),
+    sprite("tele"),
     area(),
+    solid(),
     origin("topleft")
   ],
 }
@@ -147,13 +151,13 @@ const levelConfig = {
 let levelNum = 0
 
 const levels = [
-  //1st level introduces you to an enemy, the heart pickup, and the knowledge that you need the chest.
+  //1st level introduces you to glitch, gate, a spike, and key
   [ " wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
     "w                                        ww",
     "w             ",
-    "w                            ",   
-    "w             k                          g",
-    "w s  h      d         b              ",
+    "w                             ",   
+    "w                                        g",
+    "w    h    d           b               ",
     " ffffffffffffffffffffffffff      fffffffffffD ",
     "                          w      w",
     "                          w      w",
@@ -161,7 +165,7 @@ const levels = [
     "                          w     ww",
     "                          w    fww",
     "                          w  ffffw",
-    "                        ww&      w",
+    "                        ww&     kw",
     "                        w &      w",
     "                        wc&ffffffw",
     "                        www        ",
@@ -169,98 +173,120 @@ const levels = [
   ],
   //2nd level introduces you to the platforming.
   [ " wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-    "w                                w",
-    "w -                              w",
-    "w                                w",
+    "wk w                             w",
+    "wh-w                             w",
+    "w ww                             w",
     "w                                w",
     "w                                w",
     "w          B       B             w",
     "w    f                           w",
     "w    w                  ff       w",
-    "w s fw     p       p    w        w",
+    "w   fw     p       p    w        w",
     "wffffwf################fffffD    w",
     "w                                w",
     "w                                w",
-    "w                 B              w",
+    "w        B        B              w",
     "w                                w",
-    "wt                p              w",
-    "wfff              *  ffffffffffffw",
+    "wt       p        p   b          w",
+    "wfff                 ffffffffffffw",
     "          ",
     "          ",
-    "          ",
-    "          ",
-    "          ",
+    "         *        f   f",
+    "                  f c f",
+    "                   www",
   ],
-  //3rd level starts to test your platforming skill.
+  //3rd level starts to test your braincell count.
    [" wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-    "w       w   ",
-    "w       w   ",
-    "w       w   ",
-    "w       w   ", 
-    "w       w        ", 
-    "w       wwwwwwwwww",
-    "w         ",
-    "w         ",
-    "w sh",
-    "wddddddddddddddddd      c",
-    " fffffffffwwwwwwwwwwwwwwfffD "
+    " w                 ww ",
+    " w   ",
+    " wf   ",
+    " wwff            k g", 
+    " wwwwfff      b    ", 
+    " wwwwwww fffffffffffffffffffD",
+    "        ",
+    "       ",
+    "",
+    "     dddcddd      ",
+    "     ffffffw",
   ],
-  //4th ups the difficulty by adding enemies that you have to jump between.
-  [ "  wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww ",
-    " w                               w",
-    " w                               w",
-    " w                               w",
-    " w                               w", 
-    " w                               w",
-    " w                               w",
-    " w                               w",  
-    " w                               w",
-    " w s                             w",
-    " wfffffffffffffffffffffffff      w",
-    " w     f   f   f   f   f         w",
-    " w   f   f   f   f   f   f       w",
-    " w   ffffffffffffffffffffffffffff ",
-    " w   w",
-    " w   w  b         d             b",
-    " w     ",
-    " w      b  o    o    o    o   o b",
-    "  fffffffffffffffffffffffffffffffD",
+  //4th ups the difficulty by adding harder platforming
+  [ "   wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww ",
+    "  wwww                wwwwwwwwwwwww",
+    "  ww                    wwwwww  www",
+    "  w                      wwww    ww",
+    "  w                       ww     ww", 
+    "  w                       ww      w",
+    "  w                               w",
+    "ww&                               w",  
+    "w    ^                    g       w",
+    "w &ffff                           w",
+    "w w ffffffffffffffffffffffff      w",
+    "  w     f   f   f   f   f         w",
+    "  w   f   f   f   f   f   f      fw",
+    "  w   ffffffffffffffffffffffffffff ",
+    "  w   w",
+    "  w   w                        t  ",
+    "  wf    ",
+    "  wff     ",
+    "   fffff     ffffffffff     fffffD",
+    "",
+    " ",
+    "  wwwwwww",
+    "  w#####w",
+    "  w#   #w",
+    "  w# - #w",
+    "  w#   #w",
+    "  w#hch#w",
+    "  wwwwwww",
+    " ",
+    " ",
+    " ",
+    "",
+    " ",  
+    " ",
+    " ",
+    " k",
   ],
-  //5th level a real test of your skill in platforming
-   ["wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-    "w                               w",
-    "w                               w",
-    "w                               w",
-    "w                   f           w", 
-    "w              b d bw      ff   w",
-    "w         h   f  f  w     w     w",
-    "w        ff         w     w     w",
-    "w    ff  ww         fffffff     w",
-    "w s   b       o      o b        w" ,
+  //5th level a real test of your skill in platforming and skill
+   [" wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+    "ww                  f          ww",
+    "w                   f           w",
+    "w                  ff           w",
+    "w          fffffffff            w", 
+    "w         w                     w",
+    "w         w     w               w",
+    "w         w  k bw               w",
+    "ww         fffff                w",
+    "wwww    h                       w" ,
     "wfffffffffffffffffffffffffff    w",
-    "wwwfff    f   f   f   f   f     w",
-    "w       f   f   f   f   f   f   w",
-    "wff fffffffffffffffffffffffffffffwwww",
-    "w   w                               w",
-    "w ffw                               w",
-    "w   w                               w",
-    "wff w         b     d       b       w",
-    "w   w                               w",
-    "w ffw          f          f         w",
-    "w   w     f    w    f     w         w",
-    "wff    f  w         w         f     w",
-    "wfffffff                            w",
-    "wwwwwww                         b obw", 
-    "wwww       b       d       b     fffw",
-    "www                             fwwww",
-    "w  b  o b       ff             fwwwww",
-    "w   ffff  ff    ww    ff      fwwwwww",
-    "w   wwww        w     w    fffwwwwwww",
-    "w    www                            w",
-    "w     w                             w",
-    "w                                   w",
-    "wc b o  b      ff         w  b  o b w",
-    "wffffffffff         ff       ffffffD",
+    "w                               w",
+    "w fff                          fw",
+    "w f fffffffffffffffffffffffffffffwwww",
+    "w # w                               w",
+    "w f w                               w",
+    "w f w                               w",
+    "w f w               #               w",
+    "# f w               w               w",
+    "w f w          f    w    f          w",
+    "w   w     f         w               w",
+    "wf     f  w        www              w",
+    "wfffffff ffffffffffffffffffffff    fw",
+    "w  wwww                    b      ffw", 
+    "w ww                       b     fffw",
+    "www         f              b    fw ww",
+    "w     ff        ff         b   fw  ww",
+    "w   f### ###########  f    b  fw   ww",
+    "w   wwww            www    b fw   -ww",
+    "w    www              fffffffff    ww",
+    "w     w               tffffff       w",
+    "wh        ff   ff     fff  ff       w",
+    "whh  off fw          fff    ff      w",
+    "wfffffff f           fff     fffffD w",
+    "w      # #           fff            w",
+    "w      # #           fff            w",
+    "w      #c#           fff            w",
+    "w####################fff            w",
+    "wfffffffffffffffffffffffwwwwwwwwwwwww",
   ],
 ]
 
@@ -270,13 +296,13 @@ scene("game",() => {
   let hp = 2
   
   let tempinv = false
-  
+  //keycard
   let hasKey = false
-  
+  //chest key
   let hasCKey = false
-  
-  let platjump = true
-  
+  //allows you to actually jump off the plats
+  let platjump = false
+  //stops teleporting for a sec after you do it
   let telePaused = false
   
   let Tele2posX = 0
@@ -301,13 +327,12 @@ scene("game",() => {
       area({scale:0.5}),
       origin("bot"),
       body(),
-      {"speed": 200,"jumpSpeed": 420}
+      {"speed": 250,"jumpSpeed": 450}
   ]) 
+  //unlocks box allows it to move
   onUpdate("boxes", (b) => {
     if(hasCKey){
-     b.color.r = 200
-     b.color.g = 140
-     b.color.b = 60
+    b.play("unlock")
     }   
   })
 
@@ -322,9 +347,10 @@ scene("game",() => {
   })
   
   //gate lock/unlock
-  onUpdate("gate", (b) => {
-    if(hasKey){
-      b.solid = false
+  onUpdate("gate", (g) => {
+    if(hasCKey){
+      g.solid = false
+      g.play("retract")
     }   
   }) 
   
@@ -368,7 +394,16 @@ scene("game",() => {
   onCollide("boxes","button",(b,c) => {
     c.play("open")
     hasKey = true
-  }) 
+  })
+  onCollide("boxe","button",(b,c) => {
+    c.play("open")
+    hasKey = true
+  })
+  //box key grab
+  onCollide("boxe","key",(b,k) => {
+    hasCKey = true
+    destroy(k)
+  })
   //enemy button activation
   onCollide("enemy","button",(e,c) => {
     c.play("open")
@@ -378,24 +413,40 @@ scene("game",() => {
   player.onCollide("boxes",(b) => {
    if(hasCKey == true){
     if(player.pos.x <= b.pos.x) {
-    b.pos.x += 1
+    b.pos.x += 2
     }
       if(player.pos.x >= b.pos.x) {
-    b.pos.x -= 1
+    b.pos.x -= 2
     }
    }
+  })
+  player.onCollide("boxe",(b) => {
+    if(player.pos.x <= b.pos.x) {
+    b.pos.x += 2
+    }
+      if(player.pos.x >= b.pos.x) {
+    b.pos.x -= 2
+    }
   })
   //box pushes enemy
   onCollide("boxes","enemy",(b,e) => {
     if(b.pos.x <= e.pos.x) {
-    e.pos.x += 0.5
+    e.pos.x += 1
     }
       if(b.pos.x >= e.pos.x) {
-    e.pos.x -= 0.5
+    e.pos.x -= 1
     }
    })
   //anti-clipping on box-wall collision
   onCollide("boxes","wall",(b,w) => {
+    if(b.pos.x <= w.pos.x) {
+    b.pos.x -= 1
+    }
+      if(b.pos.x >= w.pos.x) {
+    b.pos.x += 1
+    }
+   })
+  onCollide("boxe","wall",(b,w) => {
     if(b.pos.x <= w.pos.x) {
     b.pos.x -= 1
     }
@@ -413,20 +464,41 @@ scene("game",() => {
     u.pos.x -= 0.5
     }
    })
-   //player moves on plat
-   player.onCollide("platform",(p) => {
-    player.play("idle")
-    if(player.pos.y <= p.pos.y) {
-    player.pos.y = p.pos.y-1
+  onCollide("boxe","boxes",(u,b) => {
+    if(b.pos.x <= u.pos.x) {
+    u.pos.x += 0.5
     }
-    platjump = true
-    telePaused = false
-    onKeyPress("space",() => {
+      if(b.pos.x >= u.pos.x) {
+    u.pos.x -= 0.5
+    }
+   })
+  //teleporter box interaction
+  onCollide("tele","boxes",(t,b) => {
+    if(telePaused == false){
+      player.pos.x = Tele2posX 
+      player.pos.y = Tele2posY
+      telePaused = true
+      wait(0.5, () => {
+       telePaused = false 
+      }) 
+     }
+   })
+  
+   onKeyPress("space",() => {
      if(platjump == true) {
      player.jump(player.jumpSpeed)
      platjump = false
      }
     })
+  
+   //player moves on plat
+   player.onCollide("platform",(p) => {
+     player.play("idle")
+    if(player.pos.y <= p.pos.y) {
+    player.pos.y = p.pos.y-1
+    }
+    platjump = true
+    telePaused = false
   }) 
   //animation reset on player
   player.onCollide("wall",() => {
@@ -464,7 +536,7 @@ scene("game",() => {
       }
     } 
   })
-  
+  //teleports player
   player.onCollide("tele",(t) => {
     if(telePaused == false){
      player.pos.x = Tele2posX
@@ -519,7 +591,7 @@ scene("game",() => {
   }) 
   
   onKeyRelease(["d","a","left","right"],() => {
-      player.play("idle")           
+     player.play("idle")           
   }) 
   
    onKeyPress("w",() => {
@@ -535,16 +607,16 @@ scene("game",() => {
   })
   
    onKeyPress("space",() => {
-     if(player.isGrounded) {
-       player.jump(player.jumpSpeed)      
-      }      
+     if(player.isGrounded()) {
+       player.jump(player.jumpSpeed)
+      }
   })
 })
 
 //the main menu
 scene("menu",() => {
   add([
-    text("Dragon World"),
+    text("Slime Time"),
     pos(width()/2,height()/2),
     origin("center")
   ])

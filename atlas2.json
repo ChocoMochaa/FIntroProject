@@ -1,0 +1,23 @@
+{
+"Gate": {
+	"x": 0,
+	"y": 0,
+	"width": 128,
+	"height": 64,
+	"sliceX": 4,
+	"anims": {
+		"retract": {
+			"from": 0,
+			"to": 3,
+			"speed": 4,
+			"loop": false
+		},
+		"close": {
+			"from": 3,
+			"to": 0,
+			"speed": 4,
+			"loop": false
+		}
+	}
+ }
+}

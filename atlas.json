@@ -1,21 +1,21 @@
 {
   "hero": {
-	"x": 128,
-	"y": 196,
+	"x": 0,
+	"y": 16,
 	"width": 144,
-	"height": 28,
+	"height": 16,
 	"sliceX": 9,
 	"anims": {
 		"idle": {
 			"from": 0,
-			"to": 3,
-			"speed": 7,
+			"to": 2,
+			"speed": 6,
 			"loop": true
 		},
 		"run": {
-			"from": 4,
-			"to": 7,
-			"speed": 5,
+			"from": 3,
+			"to": 8,
+			"speed": 12,
 			"loop": true
 		},
 		"hit": 8
@@ -43,43 +43,41 @@
 	}
   },
   "floor": {
-	"x": 16,
-	"y": 64,
-	"width": 48,
-	"height": 48,
-	"sliceX": 3,
-	"sliceY": 3
+	"x": 0,
+	"y": 32,
+	"width": 16,
+	"height": 16
   },
   "chest": {
-	"x": 304,
-	"y": 304,
-	"width": 48,
+	"x": 0,
+	"y": 0,
+	"width": 32,
 	"height": 16,
-	"sliceX": 3,
+	"sliceX": 2,
 	"anims": {
 		"open": {
 			"from": 0,
-			"to": 2,
+			"to": 1,
 			"speed": 20,
 			"loop": false
 		},
 		"close": {
-			"from": 2,
+			"from": 1,
 			"to": 0,
 			"speed": 20,
 			"loop": false
 		}
 	}
   },
-  "sword": {
-	"x": 322,
-	"y": 81,
-	"width": 12,
-	"height": 30
+  "key": {
+	"x": 16,
+	"y": 32,
+	"width": 16,
+	"height": 16
   },
   "wall": {
-	"x": 16,
-	"y": 16,
+	"x": 0,
+	"y": 32,
 	"width": 16,
 	"height": 16
   },
@@ -133,33 +131,63 @@
     "sliceX":2
   },
   "half_heart": {
-	"x": 287,
-	"y": 255,
-	"width": 48,
-	"height": 20,
-    "sliceX":2.9,
+	"x": 0,
+	"y": 48,
+	"width": 80,
+	"height": 16,
+    "sliceX":5,
     "anims": {
 	  "idle": {
-	    "from": 2,
+	    "from": 4,
 	    "to": 0,
-	    "speed": 6,
+	    "speed": 10,
 	    "loop": true
 	  }
     }
   },
   "demon":{
-    "x":372,
-    "y":50,
-    "width":58,
-    "height":25,
-    "sliceX":3.7,
-    "anims": {
-	  "idle": {
-	    "from": 0,
-	    "to": 3,
-	    "speed": 9,
-	    "loop": true
-	  }
-    }
+    "x":64,
+    "y":32,
+    "width":16,
+    "height":16
+  },
+  "box": {
+	"x": 32,
+	"y": 0,
+	"width": 32,
+	"height": 16,
+	"sliceX": 2,
+	"anims": {
+		"lock": {
+			"from": 0,
+			"to": 1,
+			"speed": 20,
+			"loop": false
+		},
+		"unlock": {
+			"from": 1,
+			"to": 0,
+			"speed": 20,
+			"loop": false
+		}
+	}
+  },
+  "boxe": {
+	"x": 48,
+	"y": 0,
+	"width": 16,
+	"height": 16
+  },
+  "plasma": {
+	"x": 32,
+	"y": 32,
+	"width": 16,
+	"height": 16
+  },
+  "tele": {
+	"x": 48,
+	"y": 32,
+	"width": 16,
+	"height": 16
   }
 }
