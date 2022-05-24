@@ -45,7 +45,9 @@ const levelConfig = {
   ],
   "g": () => [
     "gate",
-    sprite("Gate"),
+    sprite("Gate",{
+      anim: "close"
+    }),
     area(),
     origin("left"),
     solid()
@@ -227,7 +229,7 @@ const levels = [
     "  w   w",
     "  w   w                        t  ",
     "  wf    ",
-    "  wff     ",
+    "  wff           ddd",
     "   fffff     ffffffffff     fffffD",
     "",
     " ",
@@ -350,9 +352,10 @@ scene("game",() => {
   onUpdate("gate", (g) => {
     if(hasCKey){
       g.solid = false
-      g.play("retract")
     }   
   }) 
+  
+ 
   
   //plat movement
   onUpdate("platform",(p) => {
@@ -389,6 +392,11 @@ scene("game",() => {
   player.onCollide("key",(k) => {
     hasCKey = true
     destroy(k)
+    const g = get("gate")[0]
+    // if(hasCKey){
+    g.stop()
+      g.play("open")
+    //}
   }) 
   //box button activation
   onCollide("boxes","button",(b,c) => {

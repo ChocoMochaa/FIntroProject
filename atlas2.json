@@ -6,7 +6,7 @@
 	"height": 64,
 	"sliceX": 4,
 	"anims": {
-		"retract": {
+		"open": {
 			"from": 0,
 			"to": 3,
 			"speed": 4,
